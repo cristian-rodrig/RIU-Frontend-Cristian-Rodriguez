@@ -14,7 +14,7 @@ export class HeroService {
   fetchHeroes() {
     this.http.get<Hero[]>('https://akabab.github.io/superhero-api/api/all.json')
       .subscribe(data => {
-        this.heroes.set(data.slice(0, 60));
+        this.heroes.set(data.slice(0, 120));
       });
   }
 
