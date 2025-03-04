@@ -1,0 +1,50 @@
+.table-container {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #f9f9f9;
+  }
+  
+  mat-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+  }
+  
+  mat-row:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+  
+  mat-header-row {
+    font-size: 18px;
+    font-weight: bold;
+    background-color: #a2a2a3;
+    color: white;
+  }
+  
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px;
+  }
+  
+  .hero-name {
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  mat-cell img {
+    width: 80px;
+    height: auto;
+    border-radius: 8px;
+    margin: 8px 0;
+    padding: 4px;
+  }
+
+  h1 {
+    padding-left: 20px;
+  }
+  
+  

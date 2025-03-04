@@ -1,65 +1,66 @@
-<h1>Lista de Héroes</h1>
-
-<mat-form-field appearance="outline">
-  <mat-label>Buscar héroe</mat-label>
-  <input matInput (input)="filterHeroes($event)" placeholder="Ej: Superman" />
-  <mat-icon matSuffix>search</mat-icon>
-</mat-form-field>
-
-<mat-table [dataSource]="filteredHeroes()" class="mat-elevation-z8">
-
-  <ng-container matColumnDef="name">
-    <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
-    <mat-cell *matCellDef="let hero"> {{ hero.name }} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="slug">
-    <mat-header-cell *matHeaderCellDef> Slug </mat-header-cell>
-    <mat-cell *matCellDef="let hero"> {{ hero.slug }} </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="image">
-    <mat-header-cell *matHeaderCellDef> Imagen </mat-header-cell>
-    <mat-cell *matCellDef="let hero">
-      <img [src]="hero.images.sm" [alt]="hero.name" width="50" />
-    </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="powerstats">
-    <mat-header-cell *matHeaderCellDef> Powerstats </mat-header-cell>
-    <mat-cell *matCellDef="let hero">
-      🧠 {{ hero.powerstats.intelligence }} | 💪 {{ hero.powerstats.strength }} | ⚡ {{ hero.powerstats.speed }}
-    </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="appearance">
-    <mat-header-cell *matHeaderCellDef> Apariencia </mat-header-cell>
-    <mat-cell *matCellDef="let hero">
-      👤 {{ hero.appearance.gender }} | 🎨 {{ hero.appearance.eyeColor }} | 📏 {{ hero.appearance.height[1] }}
-    </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="biography">
-    <mat-header-cell *matHeaderCellDef> Biografía </mat-header-cell>
-    <mat-cell *matCellDef="let hero">
-      🏡 {{ hero.biography.placeOfBirth }} | 🏷 {{ hero.biography.publisher }}
-    </mat-cell>
-  </ng-container>
-
-  <ng-container matColumnDef="actions">
-    <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
-    <mat-cell *matCellDef="let hero">
-      <button mat-icon-button color="primary" (click)="editHero(hero.id)">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button mat-icon-button color="warn" (click)="deleteHero(hero.id)">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </mat-cell>
-  </ng-container>
-
-  <mat-header-row *matHeaderRowDef="['name', 'slug', 'image', 'powerstats', 'appearance', 'biography', 'actions']"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: ['name', 'slug', 'image', 'powerstats', 'appearance', 'biography', 'actions'];"></mat-row>
-</mat-table>
-
-
+<div class="header-container">
+    <h1>Lista de Héroes</h1>
+    <mat-form-field appearance="outline">
+      <mat-label>Buscar héroe</mat-label>
+      <input matInput 
+            (input)="filterHeroes($event)" 
+            placeholder="Ej: Superman" 
+        />
+      <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+  </div>
+  
+  <div class="table-container">
+    <mat-table [dataSource]="filteredHeroes()" class="mat-elevation-z8">
+      
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
+        <mat-cell *matCellDef="let hero" class="hero-name"> {{ hero.name }} </mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="image">
+        <mat-header-cell *matHeaderCellDef> Imagen </mat-header-cell>
+        <mat-cell *matCellDef="let hero">
+          <img [src]="hero.images.sm" [alt]="hero.name" width="80" />
+        </mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="powerstats">
+        <mat-header-cell *matHeaderCellDef> Poderes Stats </mat-header-cell>
+        <mat-cell *matCellDef="let hero">
+          🧠 {{ hero.powerstats.intelligence }} | 💪 {{ hero.powerstats.strength }} | ⚡ {{ hero.powerstats.speed }}
+        </mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="appearance">
+        <mat-header-cell *matHeaderCellDef> Apariencia </mat-header-cell>
+        <mat-cell *matCellDef="let hero">
+          👤 {{ hero.appearance.gender }} | 🎨 {{ hero.appearance.eyeColor }} | 📏 {{ hero.appearance.height[1] }}
+        </mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="biography">
+        <mat-header-cell *matHeaderCellDef> Biografía </mat-header-cell>
+        <mat-cell *matCellDef="let hero">
+          🏡 {{ hero.biography.placeOfBirth }} | 🏷 {{ hero.biography.publisher }}
+        </mat-cell>
+      </ng-container>
+  
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
+        <mat-cell *matCellDef="let hero">
+          <button mat-icon-button color="primary" (click)="editHero(hero.id)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteHero(hero.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+  
+      <mat-header-row *matHeaderRowDef="['name', 'image', 'powerstats', 'appearance', 'biography', 'actions']"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: ['name', 'image', 'powerstats', 'appearance', 'biography', 'actions'];"></mat-row>
+  
+    </mat-table>
+  </div>
+  

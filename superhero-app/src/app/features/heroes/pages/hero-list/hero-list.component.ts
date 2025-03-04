@@ -41,7 +41,7 @@ export class HeroListComponent implements OnInit{
     )
   );
 
-  displayedColumns: string[] = ['name', 'slug', 'image', 'powerstats', 'appearance', 'biography', 'actions'];
+  displayedColumns: string[] = ['name','image', 'powerstats', 'appearance', 'biography', 'actions'];
 
   ngOnInit(): void {
     this.heroService.fetchHeroes();
