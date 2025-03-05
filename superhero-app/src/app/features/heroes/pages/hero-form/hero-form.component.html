@@ -1,1 +1,72 @@
-<p>hero-form works!</p>
+<h2>@if (heroId) { Editar Héroe } @else { Nuevo Héroe }</h2>
+
+<div class="form-container">
+  <form [formGroup]="heroForm" (ngSubmit)="saveHero()">
+    
+    <div class="field-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput formControlName="name" required />
+      </mat-form-field>
+    </div>
+
+    <div class="field-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Inteligencia</mat-label>
+        <input type="number" matInput formControlName="intelligence" required />
+      </mat-form-field>
+    </div>
+
+    <div class="field-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Fuerza</mat-label>
+        <input type="number" matInput formControlName="strength" required />
+      </mat-form-field>
+    </div>
+
+    <div class="field-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Velocidad</mat-label>
+        <input type="number" matInput formControlName="speed" required />
+      </mat-form-field>
+    </div>
+
+    <div class="field-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Género</mat-label>
+        <input matInput formControlName="gender" required />
+      </mat-form-field>
+    </div>
+
+    <div class="field-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Color de Ojos</mat-label>
+        <input matInput formControlName="eyeColor" required />
+      </mat-form-field>
+    </div>
+
+    <div class="field-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Lugar de Nacimiento</mat-label>
+        <input matInput formControlName="placeOfBirth" />
+      </mat-form-field>
+    </div>
+
+    <div class="field-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Editorial</mat-label>
+        <input matInput formControlName="publisher" />
+      </mat-form-field>
+    </div>
+
+    <div class="button-container">
+      <button mat-raised-button color="primary" type="submit" [disabled]="heroForm.invalid">
+        Guardar
+      </button>
+      <button mat-button color="warn" (click)="router.navigate(['/'])">
+        Cancelar
+      </button>
+    </div>
+
+  </form>
+</div>

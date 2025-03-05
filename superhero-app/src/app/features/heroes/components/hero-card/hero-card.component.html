@@ -1,1 +1,13 @@
-<p>hero-card works!</p>
+@if (hero) {
+    <mat-card class="hero-card">
+      <mat-card-header>
+        <mat-card-title>{{ hero.name }}</mat-card-title>
+      </mat-card-header>
+      <img mat-card-image [src]="hero.images.sm" [alt]="hero.name">
+      <mat-card-content>
+        <p>🧠 {{ hero.powerstats.intelligence }} | 💪 {{ hero.powerstats.strength }} | ⚡ {{ hero.powerstats.speed }}</p>
+        <p>👤 {{ hero.appearance.gender }} | 🎨 {{ hero.appearance.eyeColor }}</p>
+      </mat-card-content>
+    </mat-card>
+  }
+  

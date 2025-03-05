@@ -1,5 +1,5 @@
 export interface Hero {
-  id: number;
+  id: string | number;
   name: string;
   slug: string;
   powerstats: any;

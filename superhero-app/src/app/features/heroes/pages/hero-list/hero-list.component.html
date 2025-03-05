@@ -10,8 +10,12 @@
     </mat-form-field>
   </div>
   
+  <button mat-raised-button class="add-hero-button" color="primary" (click)="createHero()">
+      + Crear Héroe
+  </button>
   <div class="table-container">
-    <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+    <mat-table [dataSource]="heroes()" class="mat-elevation-z8">
       
       <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef> Nombre </mat-header-cell>
@@ -21,7 +25,13 @@
       <ng-container matColumnDef="image">
         <mat-header-cell *matHeaderCellDef> Imagen </mat-header-cell>
         <mat-cell *matCellDef="let hero">
-          <img [src]="hero.images.sm" [alt]="hero.name" width="80" />
+            <img 
+            [src]="hero.images.sm" 
+            [alt]="hero.name" 
+            width="80" 
+            (click)="openHeroCard(hero)" 
+            style="cursor: pointer;"
+          />
         </mat-cell>
       </ng-container>
   
@@ -49,11 +59,11 @@
       <ng-container matColumnDef="actions">
         <mat-header-cell *matHeaderCellDef> Acciones </mat-header-cell>
         <mat-cell *matCellDef="let hero">
-          <button mat-icon-button color="primary" (click)="editHero(hero.id)">
-            <mat-icon>edit</mat-icon>
+          <button mat-icon-button (click)="editHero(hero.id)">
+            <mat-icon color="primary">edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="deleteHero(hero.id)">
-            <mat-icon>delete</mat-icon>
+          <button mat-icon-button (click)="deleteHero(hero.id)">
+            <mat-icon color="warn">delete</mat-icon>
           </button>
         </mat-cell>
       </ng-container>

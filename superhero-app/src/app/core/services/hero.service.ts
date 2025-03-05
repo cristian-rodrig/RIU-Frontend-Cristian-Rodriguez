@@ -6,11 +6,10 @@ import { Hero } from '../models/heroe.model';
   providedIn: 'root',
 })
 export class HeroService {
-  private heroes = signal<Hero[]>([]); // Estado con señales
+  private heroes = signal<Hero[]>([]);
 
   constructor(private http: HttpClient) {}
 
-  // Cargar los 60 héroes más famosos desde la API
   fetchHeroes() {
     this.http.get<Hero[]>('https://akabab.github.io/superhero-api/api/all.json')
       .subscribe(data => {
@@ -18,37 +17,32 @@ export class HeroService {
       });
   }
 
-  // Obtener todos los héroes
   getHeroes(): Signal<Hero[]> {
     return this.heroes;
   }
 
-  // Obtener un héroe por ID
-  getHeroById(id: number): Signal<Hero | undefined> {
-    return computed(() => this.heroes().find(hero => hero.id === id));
+  getHeroById(id: string | number): Signal<Hero | undefined> {
+    return computed(() => this.heroes().find(hero => hero.id.toString() === id.toString()));
   }
 
-  // Filtrar héroes por nombre
   searchHeroes(name: string): Signal<Hero[]> {
     return computed(() => this.heroes().filter(hero =>
       hero.name.toLowerCase().includes(name.toLowerCase())
     ));
   }
 
-  // Agregar un nuevo héroe
   addHero(hero: Hero) {
-    this.heroes.update(heroes => [...heroes, hero]);
+    const newHero = { ...hero, id: crypto.randomUUID() };
+    this.heroes.update(heroes => [...heroes, newHero]);
   }
 
-  // Editar un héroe existente
   updateHero(updatedHero: Hero) {
     this.heroes.update(heroes =>
-      heroes.map(hero => (hero.id === updatedHero.id ? updatedHero : hero))
+      heroes.map(hero => (hero.id.toString() === updatedHero.id.toString() ? updatedHero : hero))
     );
   }
 
-  // Eliminar un héroe
-  deleteHero(id: number) {
-    this.heroes.update(heroes => heroes.filter(hero => hero.id !== id));
+  deleteHero(id: string | number) {
+    this.heroes.update(heroes => heroes.filter(hero => hero.id.toString() !== id.toString()));
   }
 }

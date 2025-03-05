@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { Hero } from '../../../../core/models/heroe.model';
 import { HeroService } from '../../../../core/services/hero.service';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { HeroCardComponent } from '../../components/hero-card/hero-card.component';
 
 
 @Component({
@@ -24,7 +26,8 @@ import { MatTableDataSource } from '@angular/material/table';
     MatInputModule,
     MatFormFieldModule,
     MatIconModule,
-    MatPaginatorModule],
+    MatPaginatorModule,
+    MatDialogModule],
 })
 export class HeroListComponent implements OnInit, AfterViewInit{
 
@@ -42,13 +45,7 @@ export class HeroListComponent implements OnInit, AfterViewInit{
     this.dataSource.data = this.heroes();
   }, { injector: this.injector });
 
-  filteredHeroes: Signal<Hero[]> = computed(() =>
-    this.heroes().filter(hero =>
-      hero.name.toLowerCase().includes(this.searchTerm().toLowerCase())
-    )
-  );
-
-  displayedColumns: string[] = ['name','image', 'powerstats', 'appearance', 'biography', 'actions'];
+  constructor(private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.heroService.fetchHeroes();  
@@ -58,18 +55,40 @@ export class HeroListComponent implements OnInit, AfterViewInit{
       this.dataSource.paginator = this.paginator;
   }
 
+  openHeroCard(hero: Hero) {
+    console.log(hero)
+    this.dialog.open(HeroCardComponent, {
+      data: { hero },
+      width: '300px',
+    });
+  }
+
+  filteredHeroes: Signal<Hero[]> = computed(() =>
+    this.heroes().filter(hero =>
+      hero.name.toLowerCase().includes(this.searchTerm().toLowerCase())
+    )
+  );
+
+  displayedColumns: string[] = ['name','image', 'powerstats', 'appearance', 'biography', 'actions'];
+
   filterHeroes(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     this.searchTerm.set(value);
     this.dataSource.filter = value.trim().toLowerCase();
   }
 
-  editHero(id: number) {
-    this.router.navigate(['/heroes/edit', id]);
+  editHero(id: string | number) {
+    this.router.navigate([`/heroes/edit/${id}`]);
   }
 
-  deleteHero(id: number) {
+  deleteHero(id: string | number) {
     this.heroService.deleteHero(id);
   }
+
+  createHero() {
+    this.router.navigate(['/heroes/new']);
+  }
+  
+
 
 }
