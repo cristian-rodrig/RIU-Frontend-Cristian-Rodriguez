@@ -1,23 +1,25 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TestBed } from '@angular/core/testing';
 import { HeroListComponent } from './hero-list.component';
+import { HeroService } from '../../../../core/services/hero.service';
+import { provideHttpClient } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 describe('HeroListComponent', () => {
-  let component: HeroListComponent;
-  let fixture: ComponentFixture<HeroListComponent>;
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HeroListComponent]
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(HeroListComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+      providers: [
+        HeroService,
+        provideHttpClient(),
+        { provide: MatDialog, useValue: {} },
+        { provide: Router, useValue: {} },
+      ],
+    }).compileComponents();
   });
 
-  it('should create', () => {
+  it('debería crearse el componente', () => {
+    const fixture = TestBed.createComponent(HeroListComponent);
+    const component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });
 });

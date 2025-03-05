@@ -6,6 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HeroService } from '../../../../core/services/hero.service';
 import { Hero } from '../../../../core/models/heroe.model';
+import { UppercaseDirective } from '../../../../shared/directives/uppercase.directive';
 
 @Component({
   selector: 'app-hero-form',
@@ -17,6 +18,7 @@ import { Hero } from '../../../../core/models/heroe.model';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    UppercaseDirective,
   ],
 })
 export class HeroFormComponent implements OnInit {
@@ -94,9 +96,9 @@ export class HeroFormComponent implements OnInit {
         relatives: 'Desconocida',
       },
       images: {
-        sm: 'https://via.placeholder.com/80',
-        md: 'https://via.placeholder.com/150',
-        lg: 'https://via.placeholder.com/300',
+        sm: ['assets/images/default-hero.png'],
+        md: ['assets/images/default-hero.png'],
+        lg: ['assets/images/default-hero.png'],
       },
       slug: this.heroForm.value.name.toLowerCase().replace(/ /g, '-'),
     };

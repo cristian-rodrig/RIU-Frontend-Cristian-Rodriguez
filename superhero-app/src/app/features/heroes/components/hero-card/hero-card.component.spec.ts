@@ -1,23 +1,20 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { TestBed } from '@angular/core/testing';
 import { HeroCardComponent } from './hero-card.component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 describe('HeroCardComponent', () => {
-  let component: HeroCardComponent;
-  let fixture: ComponentFixture<HeroCardComponent>;
-
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HeroCardComponent]
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(HeroCardComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+      providers: [
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        { provide: MatDialogRef, useValue: { close: () => {} } },
+      ],
+    }).compileComponents();
   });
 
-  it('should create', () => {
+  it('debería crearse el componente', () => {
+    const fixture = TestBed.createComponent(HeroCardComponent);
+    const component = fixture.componentInstance;
     expect(component).toBeTruthy();
   });
 });

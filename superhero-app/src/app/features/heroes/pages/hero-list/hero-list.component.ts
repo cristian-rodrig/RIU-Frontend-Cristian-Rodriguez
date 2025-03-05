@@ -1,17 +1,17 @@
-import { Component, OnInit, inject, Signal, computed, signal, effect, ViewChild, AfterViewInit, Injector } from '@angular/core';
+import { Component, inject, Signal, computed, signal, OnInit, effect } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
-import { MatCardModule } from '@angular/material/card';
+import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 import { Hero } from '../../../../core/models/heroe.model';
 import { HeroService } from '../../../../core/services/hero.service';
-import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { HeroCardComponent } from '../../components/hero-card/hero-card.component';
+import { SwalService } from '../../../../core/services/swal.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @Component({
@@ -21,74 +21,82 @@ import { HeroCardComponent } from '../../components/hero-card/hero-card.componen
   styleUrl: './hero-list.component.scss',
   imports: [
     MatTableModule,
-    MatCardModule,
+    MatPaginatorModule,
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
     MatIconModule,
-    MatPaginatorModule,
-    MatDialogModule],
+    MatDialogModule,
+    MatProgressSpinnerModule,
+  ],
 })
-export class HeroListComponent implements OnInit, AfterViewInit{
-
+export class HeroListComponent implements OnInit {
   private heroService = inject(HeroService);
   private router = inject(Router);
-  private injector = inject(Injector);
+  private swalService = inject(SwalService);
+  private dialog = inject(MatDialog);
 
   heroes: Signal<Hero[]> = this.heroService.getHeroes();
   searchTerm = signal<string>('');
+  pageSize = signal<number>(20);
+  currentPage = signal<number>(0);
 
-  dataSource = new MatTableDataSource<Hero>([]);
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  displayedColumns: string[] = ['name', 'image', 'powerstats', 'appearance', 'biography', 'actions'];
 
-  private heroesEffect = effect(() => {
-    this.dataSource.data = this.heroes();
-  }, { injector: this.injector });
+  totalHeroes = computed(() => this.filteredHeroes().length);
 
-  constructor(private dialog: MatDialog) {}
-
-  ngOnInit(): void {
-    this.heroService.fetchHeroes();  
-  }
-
-  ngAfterViewInit() {
-      this.dataSource.paginator = this.paginator;
-  }
-
-  openHeroCard(hero: Hero) {
-    console.log(hero)
-    this.dialog.open(HeroCardComponent, {
-      data: { hero },
-      width: '300px',
-    });
-  }
-
-  filteredHeroes: Signal<Hero[]> = computed(() =>
-    this.heroes().filter(hero =>
-      hero.name.toLowerCase().includes(this.searchTerm().toLowerCase())
-    )
+  filteredHeroes = computed(() =>
+    this.heroes().length > 0
+      ? this.heroes().filter(hero =>
+          hero.name.toLowerCase().includes(this.searchTerm().toLowerCase())
+        )
+      : []
   );
 
-  displayedColumns: string[] = ['name','image', 'powerstats', 'appearance', 'biography', 'actions'];
+  paginatedHeroes = computed(() => {
+    const start = this.currentPage() * this.pageSize();
+    return this.filteredHeroes().slice(start, start + this.pageSize());
+  });
+  
 
-  filterHeroes(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
-    this.searchTerm.set(value);
-    this.dataSource.filter = value.trim().toLowerCase();
+  ngOnInit() {
+    if (this.heroService.getHeroes()().length === 0) {
+      this.heroService.fetchHeroes();
+    }
   }
 
+  filterHeroes(event: Event) {
+    const inputValue = (event.target as HTMLInputElement).value;
+    this.searchTerm.set(inputValue);
+    this.currentPage.set(0);
+  }
+
+  onPageChange(event: any) {
+    this.currentPage.set(event.pageIndex);
+    this.pageSize.set(event.pageSize);
+  }  
+  
   editHero(id: string | number) {
     this.router.navigate([`/heroes/edit/${id}`]);
   }
 
-  deleteHero(id: string | number) {
-    this.heroService.deleteHero(id);
+  async deleteHero(id: string | number) {
+    const confirm = await this.swalService.confirmDelete();
+    if (confirm) {
+      this.heroService.deleteHero(id);
+    }
   }
 
   createHero() {
     this.router.navigate(['/heroes/new']);
   }
+
+  openHeroCard(hero: Hero) {
+    this.dialog.open(HeroCardComponent, {
+      data: { hero },
+      width: '300px',
+    });
+  }
   
-
-
+  
 }
