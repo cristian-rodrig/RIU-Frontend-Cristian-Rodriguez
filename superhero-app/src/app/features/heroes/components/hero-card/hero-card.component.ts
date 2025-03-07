@@ -15,6 +15,5 @@ export class HeroCardComponent {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { hero: Hero }) {
     this.hero = data.hero;
-    console.log('Datos recibidos en HeroCardComponent:', this.hero);
   }
 }

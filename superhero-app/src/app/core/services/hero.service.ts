@@ -1,19 +1,18 @@
 import { Injectable, Signal, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Hero } from '../models/heroe.model';
-import { SwalService } from './swal.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HeroService {
+  private BASE_URL = 'https://akabab.github.io/superhero-api/api';
   private heroes = signal<Hero[]>([]);
-  private swalService = inject(SwalService);
 
   constructor(private http: HttpClient) {}
 
   fetchHeroes() {
-    this.http.get<Hero[]>('https://akabab.github.io/superhero-api/api/all.json')
+    this.http.get<Hero[]>(`${this.BASE_URL}/all.json`)
       .subscribe(data => {
         this.heroes.set(data);
       });
@@ -44,7 +43,6 @@ export class HeroService {
           lg: 'assets/images/default-hero.png',
         }
       };
-      this.swalService.success('Nuevo héroe agregado satisfactoriamente');
       return [newHero, ...heroes];
     });
   }
@@ -58,7 +56,6 @@ export class HeroService {
       )
     );
   }
-  
 
   deleteHero(id: string | number) {
     this.heroes.update(heroes => heroes.filter(hero => hero.id.toString() !== id.toString()));

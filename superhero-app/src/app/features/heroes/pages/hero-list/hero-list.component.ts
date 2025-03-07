@@ -12,6 +12,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { HeroCardComponent } from '../../components/hero-card/hero-card.component';
 import { SwalService } from '../../../../core/services/swal.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LoadingService } from '../../../../core/services/loading.service';
 
 
 @Component({
@@ -31,10 +32,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   ],
 })
 export class HeroListComponent implements OnInit {
-  private heroService = inject(HeroService);
-  private router = inject(Router);
   private swalService = inject(SwalService);
   private dialog = inject(MatDialog);
+  public heroService = inject(HeroService);
+  public router = inject(Router);
+  public loading = inject(LoadingService).loading;
 
   heroes: Signal<Hero[]> = this.heroService.getHeroes();
   searchTerm = signal<string>('');
@@ -45,14 +47,14 @@ export class HeroListComponent implements OnInit {
 
   totalHeroes = computed(() => this.filteredHeroes().length);
 
-  filteredHeroes = computed(() =>
-    this.heroes().length > 0
-      ? this.heroes().filter(hero =>
-          hero.name.toLowerCase().includes(this.searchTerm().toLowerCase())
-        )
-      : []
-  );
-
+ filteredHeroes = computed(() =>
+   this.heroes().length > 0
+     ? this.heroes().filter(hero =>
+         hero.name.toLowerCase().includes(this.searchTerm().toLowerCase())
+       )
+     : []
+ );
+  
   paginatedHeroes = computed(() => {
     const start = this.currentPage() * this.pageSize();
     return this.filteredHeroes().slice(start, start + this.pageSize());
@@ -60,7 +62,7 @@ export class HeroListComponent implements OnInit {
   
 
   ngOnInit() {
-    if (this.heroService.getHeroes()().length === 0) {
+    if (this.heroes().length === 0) {
       this.heroService.fetchHeroes();
     }
   }

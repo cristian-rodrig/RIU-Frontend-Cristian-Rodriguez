@@ -21,11 +21,10 @@ export class SwalService {
 
   success(message: string) {
     Swal.fire({
-      title: 'Éxito',
-      text: message,
+      title: message,
       icon: 'success',
       confirmButtonText: 'OK',
-      timer: 5000,
+      timer: 4000,
       showConfirmButton: false,
     });
   }

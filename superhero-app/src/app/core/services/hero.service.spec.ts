@@ -62,19 +62,10 @@ describe('HeroService', () => {
   });
 
   it('debería actualizar un héroe existente', () => {
-    const hero: Hero = { id: 3, name: 'Flash', powerstats: {}, appearance: {}, biography: {}, work: {}, connections: {}, images: {}, slug: 'flash' };
-  
-    service.addHero(hero);
-  
-    console.log("Lista antes de actualizar:", service.getHeroes()()); // 👀 Verificamos los héroes antes de actualizar
-  
-    service.updateHero({ ...hero, name: 'Flash Rebirth' });
-  
-    console.log("Lista después de actualizar:", service.getHeroes()()); // 👀 Verificamos si realmente cambió
-  
+    const hero: Hero = { id: 3, name: 'Flash', powerstats: {}, appearance: {}, biography: {}, work: {}, connections: {}, images: {}, slug: 'flash' };  
+    service.addHero(hero);  
+    service.updateHero({ ...hero, name: 'Flash Rebirth' });  
     const result = service.getHeroById(3)();
-    console.log("Resultado en el test después de actualizar:", result); // 👀 Vemos qué devuelve `getHeroById()`
-  
     expect(result?.name).toBe('Flash Rebirth');
   });
   

@@ -15,7 +15,7 @@
   </button>
   <div class="table-container">
     
-    @if (heroes().length === 0) {
+    @if (loading()) {
         <div class="spinner-container">
           <mat-spinner color="primary"></mat-spinner>
         </div>

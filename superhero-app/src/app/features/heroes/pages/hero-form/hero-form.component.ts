@@ -7,6 +7,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { HeroService } from '../../../../core/services/hero.service';
 import { Hero } from '../../../../core/models/heroe.model';
 import { UppercaseDirective } from '../../../../shared/directives/uppercase.directive';
+import { SwalService } from '../../../../core/services/swal.service';
 
 @Component({
   selector: 'app-hero-form',
@@ -26,6 +27,7 @@ export class HeroFormComponent implements OnInit {
   private heroService = inject(HeroService);
   public router = inject(Router);
   private route = inject(ActivatedRoute);
+  private swalService = inject(SwalService);
 
   heroForm!: FormGroup;
   heroId: string | null = null;
@@ -105,8 +107,10 @@ export class HeroFormComponent implements OnInit {
 
     if (this.heroId) {
       this.heroService.updateHero(heroData);
+      this.swalService.success('Héroe actualizado');
     } else {
       this.heroService.addHero(heroData);
+      this.swalService.success('Nuevo héroe creado');
     }
 
     this.router.navigate(['/']);
