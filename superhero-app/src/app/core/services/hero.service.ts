@@ -1,4 +1,4 @@
-import { Injectable, Signal, signal, computed, inject } from '@angular/core';
+import { Injectable, Signal, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Hero } from '../models/heroe.model';
 
@@ -8,7 +8,10 @@ import { Hero } from '../models/heroe.model';
 export class HeroService {
   private BASE_URL = 'https://akabab.github.io/superhero-api/api';
   private heroes = signal<Hero[]>([]);
-
+  private editingHero = signal<Hero | null>(null);
+  private isEditing = signal<boolean>(false);
+  getIsEditing = this.isEditing.asReadonly();
+  getEditingHero = this.editingHero.asReadonly();
   constructor(private http: HttpClient) {}
 
   fetchHeroes() {
@@ -59,6 +62,16 @@ export class HeroService {
 
   deleteHero(id: string | number) {
     this.heroes.update(heroes => heroes.filter(hero => hero.id.toString() !== id.toString()));
+  }
+
+  startEditing(hero: Hero | null) {
+    this.isEditing.set(true);
+    this.editingHero.set(hero);
+  }
+  
+  stopEditing() {
+    this.isEditing.set(false);
+    this.editingHero.set(null);
   }
   
 }

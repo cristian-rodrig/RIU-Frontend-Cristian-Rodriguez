@@ -1,9 +1,8 @@
-import { Component, OnInit, inject, Signal } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, inject, Signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { Router, ActivatedRoute } from '@angular/router';
 import { HeroService } from '../../../../core/services/hero.service';
 import { Hero } from '../../../../core/models/heroe.model';
 import { UppercaseDirective } from '../../../../shared/directives/uppercase.directive';
@@ -22,55 +21,52 @@ import { SwalService } from '../../../../core/services/swal.service';
     UppercaseDirective,
   ],
 })
-export class HeroFormComponent implements OnInit {
+export class HeroFormComponent implements OnChanges {
   private fb = inject(FormBuilder);
   private heroService = inject(HeroService);
-  public router = inject(Router);
-  private route = inject(ActivatedRoute);
   private swalService = inject(SwalService);
-
-  heroForm!: FormGroup;
-  heroId: string | null = null;
   heroes: Signal<Hero[]> = this.heroService.getHeroes();
 
-  ngOnInit(): void {
-    this.heroForm = this.fb.group({
-      name: ['', Validators.required],
-      intelligence: ['', [Validators.required, Validators.min(1), Validators.max(100)]],
-      strength: ['', [Validators.required, Validators.min(1), Validators.max(100)]],
-      speed: ['', [Validators.required, Validators.min(1), Validators.max(100)]],
-      gender: ['', Validators.required],
-      eyeColor: ['', Validators.required],
-      placeOfBirth: [''],
-      publisher: [''],
-    });
+  @Input() hero!: Hero | null;
 
-    this.route.paramMap.subscribe(params => {
-      const id = params.get('id');
-      if (id) {
-        this.heroId = id;
-        const hero = this.heroes().find(h => h.id.toString() === id);
-        if (hero) {
-          this.heroForm.patchValue({
-            name: hero.name,
-            intelligence: hero.powerstats.intelligence,
-            strength: hero.powerstats.strength,
-            speed: hero.powerstats.speed,
-            gender: hero.appearance.gender,
-            eyeColor: hero.appearance.eyeColor,
-            placeOfBirth: hero.biography.placeOfBirth,
-            publisher: hero.biography.publisher,
-          });
-        }
+  heroForm: FormGroup = this.fb.group({
+    name: ['', Validators.required],
+    intelligence: ['', [Validators.required, Validators.min(1), Validators.max(100)]],
+    strength: ['', [Validators.required, Validators.min(1), Validators.max(100)]],
+    speed: ['', [Validators.required, Validators.min(1), Validators.max(100)]],
+    gender: ['', Validators.required],
+    eyeColor: ['', Validators.required],
+    placeOfBirth: [''],
+    publisher: [''],
+  });
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['hero']) {
+      if (this.hero) {
+        // EDIT
+        this.heroForm.patchValue({
+          name: this.hero.name || '',
+          intelligence: this.hero.powerstats?.intelligence || '',
+          strength: this.hero.powerstats?.strength || '',
+          speed: this.hero.powerstats?.speed || '',
+          gender: this.hero.appearance?.gender || '',
+          eyeColor: this.hero.appearance?.eyeColor || '',
+          placeOfBirth: this.hero.biography?.placeOfBirth || '',
+          publisher: this.hero.biography?.publisher || '',
+        });
+      } else {
+        this.heroForm.reset();
       }
-    });
+    }
   }
+  
+  
 
   saveHero() {
     if (this.heroForm.invalid) return;
 
     const heroData: Hero = {
-      id: this.heroId ?? crypto.randomUUID(),
+      id: this.hero?.id ?? crypto.randomUUID(),
       name: this.heroForm.value.name,
       powerstats: {
         intelligence: this.heroForm.value.intelligence,
@@ -105,7 +101,7 @@ export class HeroFormComponent implements OnInit {
       slug: this.heroForm.value.name.toLowerCase().replace(/ /g, '-'),
     };
 
-    if (this.heroId) {
+    if (this.hero) {
       this.heroService.updateHero(heroData);
       this.swalService.success('Héroe actualizado');
     } else {
@@ -113,6 +109,10 @@ export class HeroFormComponent implements OnInit {
       this.swalService.success('Nuevo héroe creado');
     }
 
-    this.router.navigate(['/']);
+    this.heroService.stopEditing();
+  }
+
+  cancel() {
+    this.heroService.stopEditing();
   }
 }

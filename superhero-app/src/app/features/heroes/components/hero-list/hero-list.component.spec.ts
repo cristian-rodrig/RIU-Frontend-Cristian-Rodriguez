@@ -3,11 +3,11 @@ import { HeroListComponent } from './hero-list.component';
 import { HeroService } from '../../../../core/services/hero.service';
 import { SwalService } from '../../../../core/services/swal.service';
 import { MatDialog } from '@angular/material/dialog';
-import { RouterTestingModule } from '@angular/router/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { signal } from '@angular/core';
+import { provideRouter } from '@angular/router';
 
 describe('HeroListComponent', () => {
   let component: HeroListComponent;
@@ -20,12 +20,13 @@ describe('HeroListComponent', () => {
     const swalServiceSpy = jasmine.createSpyObj('SwalService', ['confirmDelete']);
 
     await TestBed.configureTestingModule({
-      imports: [RouterTestingModule, MatTableModule, MatPaginatorModule, HeroListComponent],
+      imports: [MatTableModule, MatPaginatorModule, HeroListComponent],
       providers: [
         { provide: HeroService, useValue: heroServiceSpy },
         { provide: SwalService, useValue: swalServiceSpy },
         provideHttpClient(),
         { provide: MatDialog, useValue: {} },
+        provideRouter([])
       ],
     }).compileComponents();
 

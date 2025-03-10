@@ -1,4 +1,4 @@
-import { Component, inject, Signal, computed, signal, OnInit, effect } from '@angular/core';
+import { Component, inject, Signal, computed, signal, OnInit } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 import { Hero } from '../../../../core/models/heroe.model';
 import { HeroService } from '../../../../core/services/hero.service';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { HeroCardComponent } from '../../components/hero-card/hero-card.component';
+import { HeroCardComponent } from '../hero-card/hero-card.component';
 import { SwalService } from '../../../../core/services/swal.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoadingService } from '../../../../core/services/loading.service';
@@ -78,8 +78,8 @@ export class HeroListComponent implements OnInit {
     this.pageSize.set(event.pageSize);
   }  
   
-  editHero(id: string | number) {
-    this.router.navigate([`/heroes/edit/${id}`]);
+  editHero(hero: Hero) {
+    this.heroService.startEditing(hero);
   }
 
   async deleteHero(id: string | number) {
@@ -90,7 +90,7 @@ export class HeroListComponent implements OnInit {
   }
 
   createHero() {
-    this.router.navigate(['/heroes/new']);
+    this.heroService.startEditing(null);
   }
 
   openHeroCard(hero: Hero) {

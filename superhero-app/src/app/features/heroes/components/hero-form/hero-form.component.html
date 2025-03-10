@@ -1,5 +1,5 @@
 <div class="container">
-    <h2>@if (heroId) { Editar Héroe } @else { Nuevo Héroe }</h2>
+  <h2>@if (hero?.id) { Editar Héroe } @else { Nuevo Héroe }</h2>
     <div class="form-container">
       <form [formGroup]="heroForm" (ngSubmit)="saveHero()">
         <div class="field-container">
@@ -62,9 +62,9 @@
           <button mat-raised-button color="primary" type="submit" [disabled]="heroForm.invalid">
             Guardar
           </button>
-          <button mat-button color="warn" (click)="router.navigate(['/'])">
+          <button mat-button color="warn" type="button" (click)="cancel()">
             Cancelar
-          </button>
+          </button>          
         </div>
 
       </form>
